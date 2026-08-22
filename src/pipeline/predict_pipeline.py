@@ -1,4 +1,4 @@
-import sys
+import sys,os
 import pandas as pd
 from src.exception import CustomException
 from src.utils import load_object
@@ -8,21 +8,52 @@ class PredictPipeline:
     def __init__(self):
         pass
 
-    def predict(self,features):
-        try:
-            model_path=os.path.join("artifacts","model.pkl")
-            preprocessor_path=os.path.join('artifacts','preprocessor.pkl')
-            print("Before Loading")
-            model=load_object(file_path=model_path)
-            preprocessor=load_object(file_path=preprocessor_path)
-            print("After Loading")
-            data_scaled=preprocessor.transform(features)
-            preds=model.predict(data_scaled)
-            return preds
+    # def predict(self,features):
+    #     try:
+    #         model_path=os.path.join("artifacts","model.pkl")
+    #         preprocessor_path=os.path.join('artifacts','preprocessor.pkl')
+    #         print("Before Loading")
+    #         model=load_object(file_path=model_path)
+    #         preprocessor=load_object(file_path=preprocessor_path)
+    #         print("After Loading")
+    #         data_scaled=preprocessor.transform(features)
+    #         preds=model.predict(data_scaled)
+    #         return preds
         
-        except Exception as e:
-            raise CustomException(e,sys)
+    #     except Exception as e:
+    #         raise CustomException(e,sys)
+    def predict(self, features):
+        try:
+            model_path = os.path.join("mlproject", "artifacts", "model.pkl")
+            preprocessor_path = os.path.join("mlproject", "artifacts", "proprocessor.pkl")
 
+            print("Current directory:", os.getcwd())
+            print("Model path:", model_path)
+            print("Model exists:", os.path.exists(model_path))
+            print("Preprocessor path:", preprocessor_path)
+            print("Preprocessor exists:", os.path.exists(preprocessor_path))
+
+            print("Before Loading")
+
+            model = load_object(file_path=model_path)
+            print("Model loaded successfully")
+
+            preprocessor = load_object(file_path=preprocessor_path)
+            print("Preprocessor loaded successfully")
+
+            print("After Loading")
+
+            data_scaled = preprocessor.transform(features)
+            print("Data transformed")
+
+            preds = model.predict(data_scaled)
+            print("Prediction completed")
+
+            return preds
+
+        except Exception as e:
+            print("ACTUAL ERROR:", repr(e))
+            raise CustomException(e, sys)
 
 
 class CustomData:
